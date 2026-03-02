@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quản lý sách - Web Test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #e5e7eb; /* nền xám nhạt, không trùng với khối trắng bên trong */
+      color: #111827;
+    }
+    h1 {
+      text-align: center;
+      margin: 0 0 24px;
+      font-size: 26px;
+      letter-spacing: 0.02em;
+      color: #111827;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #f9fafb; /* khối chính xám rất nhạt để nổi trên nền body */
+      border-radius: 12px;
+      box-shadow: 0 20px 30px rgba(15, 23, 42, 0.08);
+      padding: 20px 24px 24px;
+      border: 1px solid #d1d5db;
+    }
+    fieldset {
+      margin-bottom: 18px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 12px 14px 14px;
+    }
+    legend {
+      font-weight: 600;
+      padding: 0 6px;
+      color: #111827;
+    }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+    label {
+      min-width: 90px;
+      font-size: 13px;
+      color: #4b5563;
+    }
+    input[type="number"],
+    input[type="text"] {
+      flex: 1;
+      min-width: 180px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+      transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+      background-color: #ffffff;
+    }
+    input[type="number"]:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+      background-color: #f9fafb;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      margin-top: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.15s;
+      white-space: nowrap;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+      opacity: 0.96;
+    }
+    .btn-secondary {
+      background: #10b981;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
+    }
+    .btn-secondary:hover {
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
+    }
+    .btn-ghost {
+      background: #ffffff;
+      color: #111827;
+      border: 1px solid #d1d5db;
+      box-shadow: none;
+    }
+    .btn-ghost:hover {
+      background: #f3f4f6;
+      box-shadow: none;
+    }
+    .btn-small {
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 999px;
+    }
+    .btn-danger {
+      background: #ef4444;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.35);
+    }
+    .btn-danger:hover {
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.45);
+    }
+    .fieldset-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    h3 {
+      margin: 14px 0 8px;
+      font-size: 16px;
+    }
+    #message {
+      min-height: 22px;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    table {
+      border-collapse: collapse;
+      margin-top: 4px;
+      width: 100%;
+      background: #ffffff; /* bảng trắng nằm trên khối xám nhạt, nhìn rõ ràng */
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+    thead {
+      background: #e5e7eb;
+    }
+    th,
+    td {
+      border: 1px solid #e5e7eb;
+      padding: 7px 8px;
+      text-align: left;
+    }
+    th {
+      font-weight: 600;
+      color: #374151;
+    }
+    .row-actions {
+      white-space: nowrap;
+    }
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+      .container {
+        padding: 14px;
+      }
+      .form-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      label {
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quản lý sách (Web Test)</h1>
+
+    <!-- Form thêm / cập nhật sách -->
+    <fieldset>
+      <legend>1 &amp; 3. Thêm / Thay đổi sách</legend>
+      <div class="form-row">
+        <label for="id">Mã sách:</label>
+        <input type="number" id="id" placeholder="Nhập mã số nguyên" />
+      </div>
+      <div class="form-row">
+        <label for="title">Tên sách:</label>
+        <input type="text" id="title" placeholder="Nhập tên sách" />
+      </div>
+      <div class="form-row">
+        <label for="author">Tác giả:</label>
+        <input type="text" id="author" placeholder="Nhập tên tác giả" />
+      </div>
+      <div class="form-row">
+        <label for="price">Đơn giá:</label>
+        <input type="number" step="0.01" id="price" placeholder="VD: 120000" />
+      </div>
+      <div class="fieldset-actions">
+        <button class="btn" onclick="addBook()">Thêm sách (1)</button>
+        <button class="btn btn-secondary" onclick="updateBook()">Cập nhật sách (3)</button>
+        <button class="btn btn-ghost" onclick="clearInputs()">Xóa form</button>
+      </div>
+    </fieldset>
+
+    <!-- Chức năng khác -->
+    <fieldset>
+      <legend>Các chức năng khác</legend>
+
+      <div class="fieldset-actions">
+        <button class="btn" onclick="renderBooks()">4. Xuất toàn bộ sách</button>
+        <button class="btn" onclick="findProgrammingBooks()">5. Tìm sách có từ "Lập trình"</button>
+      </div>
+
+      <div class="form-row" style="margin-top:8px;">
+        <label for="k">K (số sách):</label>
+        <input type="number" id="k" placeholder="VD: 3" />
+        <label for="p">P (giá tối đa):</label>
+        <input type="number" id="p" placeholder="VD: 150000" />
+        <button class="btn btn-ghost" onclick="takeBooksByPrice()">6. Lấy sách theo giá</button>
+      </div>
+
+      <div class="form-row" style="margin-top:8px;">
+        <label for="authors">Tác giả:</label>
+        <input type="text" id="authors" placeholder="Ví dụ: Nam, Lan, An" />
+        <button class="btn btn-ghost" onclick="findBooksByAuthors()">7. Tìm theo tác giả</button>
+      </div>
+    </fieldset>
+
+    <h3>Kết quả / Danh sách sách</h3>
+    <div id="message"></div>
+    <table id="bookTable">
+    <thead>
+      <tr>
+        <th>Mã</th>
+        <th>Tên sách</th>
+        <th>Tác giả</th>
+        <th>Giá</th>
+        <th>Hành động (2)</th>
+      </tr>
+    </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const books = [];
+    let nextId = 1; // mã sách tự tăng trên giao diện web
+
+    function showMessage(text, isError = false) {
+      const msg = document.getElementById("message");
+      msg.style.color = isError ? "red" : "#006400";
+      msg.textContent = text;
+    }
+
+    function getInputValues() {
+      const idField = document.getElementById("id");
+      const currentIdValue = idField.value.trim();
+      const id = currentIdValue === "" ? null : parseInt(currentIdValue, 10);
+      const title = document.getElementById("title").value.trim();
+      const author = document.getElementById("author").value.trim();
+      const price = parseFloat(document.getElementById("price").value);
+
+      return { id, title, author, price };
+    }
+
+    function clearInputs() {
+      document.getElementById("id").value = "";
+      document.getElementById("title").value = "";
+      document.getElementById("author").value = "";
+      document.getElementById("price").value = "";
+    }
+
+    function findBookIndexById(id) {
+      return books.findIndex(b => b.id === id);
+    }
+
+    // 1. Thêm 1 cuốn sách
+    function addBook() {
+      const { title, author, price } = getInputValues();
+      if (!title || !author || isNaN(price)) {
+        showMessage("Vui lòng nhập đầy đủ tên sách, tác giả và giá.", true);
+        return;
+      }
+      const id = nextId++;
+      document.getElementById("id").value = id;
+      books.push({ id, title, author, price });
+      clearInputs();
+      renderBooks();
+      showMessage("Đã thêm sách.");
+    }
+
+    // 2. Xóa 1 cuốn sách
+    function deleteBook(id) {
+      const idx = findBookIndexById(id);
+      if (idx === -1) {
+        showMessage("Không tìm thấy sách cần xóa.", true);
+        return;
+      }
+      books.splice(idx, 1);
+      renderBooks();
+      showMessage("Đã xóa sách có mã " + id);
+    }
+
+    // 3. Thay đổi cuốn sách
+    function updateBook() {
+      const { id, title, author, price } = getInputValues();
+      if (isNaN(id)) {
+        showMessage("Cần nhập mã sách để cập nhật.", true);
+        return;
+      }
+      const idx = findBookIndexById(id);
+      if (idx === -1) {
+        showMessage("Không tìm thấy sách có mã " + id, true);
+        return;
+      }
+      if (!title || !author || isNaN(price)) {
+        showMessage("Vui lòng nhập đầy đủ tên, tác giả, giá.", true);
+        return;
+      }
+      books[idx] = { id, title, author, price };
+      clearInputs();
+      renderBooks();
+      showMessage("Đã cập nhật sách.");
+    }
+
+    // 4. Xuất thông tin tất cả các cuốn sách
+    function renderBooks(list = books) {
+      const tbody = document.querySelector("#bookTable tbody");
+      tbody.innerHTML = "";
+      if (!list.length) return;
+
+      list.forEach(b => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${b.id}</td>
+          <td>${b.title}</td>
+          <td>${b.author}</td>
+          <td>${b.price.toFixed(2)}</td>
+          <td class="row-actions">
+            <button class="btn-small" onclick="deleteBook(${b.id})">Xóa (2)</button>
+            <button class="btn-small" onclick="fillForm(${b.id})">Sửa &amp; đưa lên form</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function fillForm(id) {
+      const idx = findBookIndexById(id);
+      if (idx === -1) return;
+      const b = books[idx];
+      document.getElementById("id").value = b.id;
+      document.getElementById("title").value = b.title;
+      document.getElementById("author").value = b.author;
+      document.getElementById("price").value = b.price;
+    }
+
+    // 5. Tìm sách có tựa đề chứa chữ "Lập trình"
+    function findProgrammingBooks() {
+      const keyword = "lập trình";
+      const result = books.filter(b =>
+        b.title.toLowerCase().includes(keyword)
+      );
+      if (!result.length) {
+        showMessage("Không có sách nào có tựa đề chứa 'Lập trình'.", true);
+      } else {
+        showMessage("Danh sách sách có 'Lập trình' trong tựa đề.");
+      }
+      renderBooks(result);
+    }
+
+    // 6. Lấy sách: nhập K và P, lấy tối đa K cuốn có giá <= P
+    function takeBooksByPrice() {
+      const k = parseInt(document.getElementById("k").value, 10);
+      const p = parseFloat(document.getElementById("p").value);
+      if (isNaN(k) || isNaN(p)) {
+        showMessage("Vui lòng nhập K và P hợp lệ.", true);
+        return;
+      }
+      const filtered = books.filter(b => b.price <= p).slice(0, k);
+      if (!filtered.length) {
+        showMessage("Không có sách nào có giá <= " + p, true);
+      } else {
+        showMessage("Đã lấy " + filtered.length + " cuốn sách (tối đa K=" + k + ").");
+      }
+      renderBooks(filtered);
+    }
+
+    // 7. Nhập danh sách tác giả, in sách của các tác giả này
+    function findBooksByAuthors() {
+      const line = document.getElementById("authors").value.trim();
+      if (!line) {
+        showMessage("Vui lòng nhập ít nhất 1 tác giả.", true);
+        return;
+      }
+      const authorSet = new Set(
+        line.split(",").map(a => a.trim().toLowerCase()).filter(a => a)
+      );
+      const result = books.filter(b =>
+        authorSet.has(b.author.toLowerCase())
+      );
+      if (!result.length) {
+        showMessage("Không tìm thấy sách của các tác giả đã nhập.", true);
+      } else {
+        showMessage("Danh sách sách của các tác giả đã nhập.");
+      }
+      renderBooks(result);
+    }
+  </script>
+</body>
+</html>
+
